@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Club Delight — House · Techno · Trance | FM 105.8 MHz · DAB+</title>
+
+<!-- SEO Meta Tags -->
+<meta name="google-site-verification" content="deQtLDfmgtaFA4Hm3GxGYae5SxtAWPKvPA05gpBMmRs">
+<meta name="description" content="Club Delight Radio — Only the best dancemusic. House, Techno en Trance. Live elke 1e zaterdag van de maand om 21:00. Te beluisteren op FM 105.8 MHz en DAB+.">
+<meta name="keywords" content="Club Delight, dance radio, house music, techno, trance, FM 105.8, DAB+, RTW, live radio, dancemusic, Resolutions, DJ Mickiemick, DJ Kooski">
+<meta name="author" content="Club Delight Radio">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://clubdelight.netlify.app/">
+
+<!-- Open Graph (WhatsApp, Facebook, Twitter preview) -->
+<meta property="og:title" content="Club Delight — Only the best dancemusic">
+<meta property="og:description" content="Live dance radio met House, Techno en Trance. Elke 1e zaterdag van de maand om 21:00 op FM 105.8 MHz en DAB+.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://clubdelight.netlify.app/">
+<meta property="og:locale" content="nl_NL">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Club Delight — Only the best dancemusic">
+<meta name="twitter:description" content="Live dance radio met House, Techno en Trance. FM 105.8 MHz · DAB+">
+
+<!-- Structured Data (Google) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RadioStation",
+  "name": "Club Delight Radio",
+  "description": "Dance radio station met House, Techno en Trance. Live elke 1e zaterdag van de maand.",
+  "url": "https://clubdelight.netlify.app/",
+  "broadcastFrequency": "FM 105.8 MHz",
+  "genre": ["House", "Techno", "Trance"],
+  "sameAs": [
+    "https://www.instagram.com/clubdelightradio/",
+    "https://www.facebook.com/p/Clubdelight-100050300297548/",
+    "https://www.tiktok.com/@clubdelight"
+  ]
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@100;300;400;600;700;900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('4qaykfNRl7xrHnFpD');</script>
+<script>
+// Early function definitions — beschikbaar voor DOM laden
+window.toggleMute = function() {
+  var bgAudio = document.getElementById('bg-audio');
+  if (!bgAudio) return;
+  bgAudio.muted = !bgAudio.muted;
+  var btn = document.getElementById('mute-btn');
+  var icon = document.getElementById('mute-icon');
+  if (bgAudio.muted) {
+    bgAudio.pause();
+    if (btn) btn.classList.add('muted');
+    if (icon) icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>';
+  } else {
+    bgAudio.play();
+    if (btn) btn.classList.remove('muted');
+    if (icon) icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>';
+  }
+};
+window.muteAudio = function() {
+  var bgAudio = document.getElementById('bg-audio');
+  if (!bgAudio) return;
+  bgAudio.muted = true;
+  bgAudio.pause();
+};
+window.submitDJForm = function() {
+  var honeypot = document.getElementById('honeypot');
+  if (honeypot && honeypot.value !== '') return;
+  var name = document.getElementById('dj-name').value.trim();
+  var email = document.getElementById('dj-email').value.trim();
+  var link = document.getElementById('dj-link').value.trim();
+  if (!name || !email || !link) { alert('Vul alle verplichte velden in (DJ naam, email en mix link).'); return; }
+  var genre = document.getElementById('dj-genre').value.trim();
+  var message = document.getElementById('dj-message').value.trim();
+  var btn = document.querySelector('.form-submit');
+  btn.textContent = 'Verzenden...';
+  btn.disabled = true;
+  emailjs.send('service_qw7ob0f', 'template_97laa1k', {
+    dj_name: name, dj_email: email, dj_link: link,
+    dj_genre: genre || 'Niet opgegeven', dj_message: message || 'Geen bericht'
+  }).then(function() {
+    document.getElementById('form-success').style.display = 'block';
+    btn.textContent = '\u2713 Verzonden!';
+  }, function(error) {
+    alert('Fout bij verzenden: ' + JSON.stringify(error));
+    btn.textContent = 'Aanmelden als DJ';
+    btn.disabled = false;
+  });
+};
+
+// ===== COUNTDOWN =====
+function getNextFirstSaturday() {
+  var now = new Date();
+  var year = now.getFullYear();
+  var month = now.getMonth();
+  function firstSatOf(y, m) {
+    var d = new Date(y, m, 1, 21, 0, 0);
+    while (d.getDay() !== 6) d.setDate(d.getDate() + 1);
+    return d;
+  }
+  var next = firstSatOf(year, month);
+  if (now >= next) {
+    month++;
+    if (month > 11) { month = 0; year++; }
+    next = firstSatOf(year, month);
+  }
+  return next;
+}
+function getNextSaturday() {
+  var now = new Date();
+  var d = new Date(now);
+  var day = d.getDay();
+  var daysUntilSat = (6 - day + 7) % 7 || 7;
+  d.setDate(d.getDate() + daysUntilSat);
+  d.setHours(21, 0, 0, 0);
+  if (day === 6 && now >= d) d.setDate(d.getDate() + 7);
+  return d;
+}
+function setCountdown(diff, ids) {
+  if (diff <= 0) {
+    ids.forEach(function(id) { var el = document.getElementById(id); if (el) el.textContent = '00'; });
+    return;
+  }
+  var vals = [
+    Math.floor(diff / 864e5),
+    Math.floor((diff % 864e5) / 36e5),
+    Math.floor((diff % 36e5) / 6e4),
+    Math.floor((diff % 6e4) / 1e3)
+  ];
+  ids.forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = String(vals[i]).padStart(2, '0');
+  });
+}
+function isLiveNow() {
+  var now = new Date();
+  var day = now.getDay();
+  var timeMin = now.getHours() * 60 + now.getMinutes();
+  if (day === 6 && timeMin >= 21 * 60) return true;
+  if (day === 0 && timeMin < 60) return true;
+  return false;
+}
+function updateCountdowns() {
+  try {
+    var now = new Date();
+    var nl = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
+    var months = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+    var cd = getNextFirstSaturday();
+    var wd = getNextSaturday();
+    setCountdown(cd - now, ['cd-days','cd-hours','cd-mins','cd-secs']);
+    setCountdown(wd - now, ['wd-days','wd-hours','wd-mins','wd-secs']);
+    var cdEl = document.getElementById('cd-date');
+    var wdEl = document.getElementById('wd-date');
+    if (cdEl) cdEl.textContent = nl[cd.getDay()] + ' ' + cd.getDate() + ' ' + months[cd.getMonth()] + ' ' + cd.getFullYear() + ' \u00b7 21:00';
+    if (wdEl) wdEl.textContent = nl[wd.getDay()] + ' ' + wd.getDate() + ' ' + months[wd.getMonth()] + ' ' + wd.getFullYear() + ' \u00b7 21:00';
+    var badge = document.getElementById('live-badge');
+    var badgeText = document.getElementById('live-badge-text');
+    if (badge && badgeText) {
+      if (isLiveNow()) { badge.classList.remove('off-air'); badgeText.textContent = 'On Air'; }
+      else { badge.classList.add('off-air'); badgeText.textContent = 'Off Air'; }
+    }
+  } catch(e) { console.error('Countdown error:', e); }
+}
+document.addEventListener('DOMContentLoaded', function() {
+  updateCountdowns();
+  setInterval(updateCountdowns, 1000);
+});
+</script>
+<style>
+ :root {
+ --bg: #06080f;
+ --bg2: #0b0f1c;
+ --surface: #0e1222;
+ --border: rgba(80,120,255,0.12);
+ --ink: #e8eeff;
+ --ink2: #8899cc;
+ --ink3: #4a5580;
+ --silver: #2a3560;
+ --blue: #4d7fff;
+ --red: #ff4455;
+ }
+ * { margin: 0; padding: 0; box-sizing: border-box; }
+ html { scroll-behavior: smooth; }
+ body {
+ background: var(--bg);
+ color: var(--ink);
+ font-family: 'Outfit', sans-serif;
+ overflow-x: hidden;
+ }
+ /* Blotchy black-blue background */
+ body::after {
+ content: '';
+ position: fixed;
+ inset: 0;
+ background:
+ radial-gradient(ellipse 60% 50% at 15% 20%, rgba(20, 50, 160, 0.55) 0%, transparent 70%),
+ radial-gradient(ellipse 45% 60% at 85% 10%, rgba(10, 30, 120, 0.45) 0%, transparent 65%),
+ radial-gradient(ellipse 70% 40% at 50% 85%, rgba(30, 60, 180, 0.35) 0%, transparent 70%),
+ radial-gradient(ellipse 35% 45% at 75% 55%, rgba(5, 20, 90, 0.6) 0%, transparent 60%),
+ radial-gradient(ellipse 50% 35% at 25% 70%, rgba(15, 40, 130, 0.4) 0%, transparent 65%),
+ radial-gradient(ellipse 80% 80% at 50% 50%, rgba(8, 14, 35, 1) 40%, transparent 100%);
+ pointer-events: none;
+ z-index: 0;
+ }
+ /* ===== NAV ===== */
+ nav {
+ position: fixed;
+ top: 0; left: 0; right: 0;
+ z-index: 1000;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ padding: 0 52px;
+ height: 64px;
+ background: rgba(6,8,15,0.85);
+ border-bottom: 1px solid var(--border);
+ backdrop-filter: blur(24px);
+ -webkit-backdrop-filter: blur(24px);
+ }
+ .nav-logo {
+ font-family: 'Outfit', sans-serif;
+ font-weight: 800;
+ font-size: 0.95rem;
+ color: var(--ink);
+ text-decoration: none;
+ letter-spacing: 3px;
+ text-transform: uppercase;
+ }
+ .nav-links {
+ display: flex;
+ gap: 40px;
+ list-style: none;
+ }
+ .nav-links a {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.62rem;
+ color: var(--ink2);
+ text-decoration: none;
+ letter-spacing: 2px;
+ text-transform: uppercase;
+ transition: color 0.2s;
+ }
+ .nav-links a:hover { color: var(--ink); }
+ .live-badge {
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ font-family: 'DM Mono', monospace;
+ font-size: 0.58rem;
+ letter-spacing: 2px;
+ color: var(--ink2);
+ background: var(--surface);
+ border: 1px solid var(--border);
+ padding: 6px 14px;
+ }
+ .live-badge.off-air {
+ color: var(--ink3);
+ border-color: rgba(80,120,255,0.06);
+ }
+ .live-badge.off-air .pulse-dot {
+ background: var(--ink3);
+ animation: none;
+ }
+ .pulse-dot {
+ width: 6px; height: 6px;
+ border-radius: 50%;
+ background: var(--red);
+ animation: pulse 1.4s infinite;
+ }
+ @keyframes pulse {
+ 0%, 100% { opacity: 1; transform: scale(1); }
+ 50% { opacity: 0.25; transform: scale(0.6); }
+ }
+ /* ===== HERO ===== */
+ .hero {
+ min-height: 55vh;
+ padding: 44px 52px 0;
+ display: grid;
+ grid-template-rows: 1fr auto;
+ position: relative;
+ overflow: hidden;
+ z-index: 1;
+ }
+ .hero-bg-img {
+ position: absolute;
+ inset: 0;
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ object-position: center;
+ filter: brightness(0.5) saturate(0.8) blur(0px);
+ z-index: 0;
+ transform: scale(1.05);
+ }
+ .hero-bg-gradient {
+ position: absolute;
+ inset: 0;
+ background:
+ radial-gradient(ellipse 60% 50% at 15% 20%, rgba(20,50,160,0.5) 0%, transparent 70%),
+ radial-gradient(ellipse 45% 60% at 85% 10%, rgba(10,30,120,0.4) 0%, transparent 65%),
+ radial-gradient(ellipse 70% 40% at 50% 85%, rgba(30,60,180,0.3) 0%, transparent 70%),
+ linear-gradient(to bottom, rgba(6,8,15,0.3) 0%, rgba(6,8,15,0.7) 100%);
+ z-index: 0;
+ }
+ .hero-inner,
+ .hero-side,
+ .hero-bottom {
+ position: relative;
+ z-index: 1;
+ }
+ .hero-inner {
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ padding: 60px 0 40px;
+ }
+ .hero-slogan {
+ font-family: 'Outfit', sans-serif;
+ font-size: 1rem;
+ font-style: italic;
+ color: var(--ink2);
+ letter-spacing: 2px;
+ margin-top: 12px;
+ font-weight: 300;
+ }
+ .hero-eyebrow {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.62rem;
+ letter-spacing: 4px;
+ color: var(--ink3);
+ text-transform: uppercase;
+ margin-bottom: 36px;
+ display: flex;
+ align-items: center;
+ gap: 16px;
+ animation: fadeUp 0.7s 0.1s ease both;
+ }
+ .hero-eyebrow::after {
+ content: '';
+ width: 60px; height: 1px;
+ background: var(--silver);
+ }
+ .hero-title {
+ font-family: 'Bebas Neue', sans-serif;
+ font-weight: 400;
+ font-size: clamp(4rem, 10vw, 10rem);
+ line-height: 0.86;
+ letter-spacing: 6px;
+ animation: fadeUp 0.7s 0.22s ease both;
+ }
+ .word-club {
+ display: block;
+ color: var(--ink);
+ text-shadow: 0 0 60px rgba(77,127,255,0.3);
+ }
+ .word-delight {
+ display: block;
+ color: transparent;
+ -webkit-text-stroke: 2px var(--blue);
+ text-shadow: 0 0 40px rgba(77,127,255,0.5);
+ }
+ /* Floating side panel */
+ .hero-side {
+ position: absolute;
+ right: 52px;
+ top: 50%;
+ transform: translateY(-50%);
+ display: flex;
+ flex-direction: column;
+ align-items: flex-end;
+ gap: 8px;
+ animation: fadeUp 0.7s 0.4s ease both;
+ }
+ .hero-genre-item {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.6rem;
+ letter-spacing: 3px;
+ color: var(--ink3);
+ text-transform: uppercase;
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ }
+ .hero-genre-item::before {
+ content: '';
+ width: 20px; height: 1px;
+ background: var(--silver);
+ }
+ .hero-big-num {
+ font-family: 'Outfit', sans-serif;
+ font-weight: 100;
+ font-size: 6rem;
+ color: var(--bg2);
+ letter-spacing: -3px;
+ line-height: 1;
+ margin-top: 16px;
+ }
+ /* Bottom wave strip */
+ .hero-bottom {
+ border-top: 1px solid var(--border);
+ padding: 18px 0;
+ display: flex;
+ align-items: center;
+ gap: 20px;
+ }
+ .waveform-container {
+ flex: 1;
+ height: 36px;
+ display: flex;
+ align-items: center;
+ gap: 2px;
+ }
+ .bar {
+ width: 2px;
+ border-radius: 1px;
+ background: var(--ink);
+ opacity: 0.12;
+ animation: wave 0.8s ease-in-out infinite alternate;
+ }
+ .bar.active { opacity: 0.55; }
+ .bar.accent { background: var(--blue); opacity: 0.85; }
+ @keyframes wave {
+ from { height: 3px; }
+ to { height: var(--h); }
+ }
+ .wave-label {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.58rem;
+ letter-spacing: 3px;
+ color: var(--ink3);
+ white-space: nowrap;
+ text-transform: uppercase;
+ }
+ @keyframes fadeUp {
+ from { opacity: 0; transform: translateY(20px); }
+ to { opacity: 1; transform: translateY(0); }
+ }
+ /* ===== TICKER ===== */
+ .ticker-wrap {
+ overflow: hidden;
+ padding: 10px 0;
+ background: rgba(14,18,34,0.8);
+ border-top: 1px solid var(--border);
+ border-bottom: 1px solid var(--border);
+ position: relative;
+ z-index: 1;
+ }
+ .ticker-track {
+ display: inline-flex;
+ animation: ticker 35s linear infinite;
+ white-space: nowrap;
+ }
+ .ticker-track span {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.62rem;
+ letter-spacing: 3px;
+ text-transform: uppercase;
+ color: var(--ink2);
+ padding: 0 28px;
+ }
+ .ticker-sep { color: var(--blue) !important; padding: 0 4px !important; }
+ @keyframes ticker {
+ from { transform: translateX(0); }
+ to { transform: translateX(-50%); }
+ }
+ /* ===== SECTIONS ===== */
+ .section-wrap {
+ max-width: 1320px;
+ margin: 0 auto;
+ padding: 56px 52px;
+ position: relative;
+ z-index: 1;
+ }
+ .section-header {
+ display: flex;
+ align-items: baseline;
+ justify-content: space-between;
+ border-bottom: 1px solid var(--border);
+ padding-bottom: 18px;
+ margin-bottom: 52px;
+ }
+ .section-num {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.58rem;
+ letter-spacing: 3px;
+ color: var(--ink3);
+ text-transform: uppercase;
+ }
+ .section-title {
+ font-family: 'Outfit', sans-serif;
+ font-weight: 800;
+ font-size: clamp(2rem, 4.5vw, 3.5rem);
+ letter-spacing: -2px;
+ color: var(--ink);
+ line-height: 1;
+ }
+ /* ===== STREAM ===== */
+ .stream-layout {
+ display: grid;
+ grid-template-columns: 1fr 300px;
+ gap: 2px;
+ }
+ .stream-main {
+ background: rgba(14,18,34,0.95);
+ border: 1px solid var(--border);
+ padding: 28px 52px;
+ position: relative;
+ overflow: hidden;
+ }
+ .stream-progress {
+ position: absolute;
+ top: 0; left: 0; right: 0;
+ height: 2px;
+ background: linear-gradient(90deg, var(--blue) var(--pct, 0%), rgba(255,255,255,0.1) var(--pct, 0%));
+ animation: prog 12s linear infinite;
+ }
+ @keyframes prog {
+ from { --pct: 0%; }
+ to { --pct: 100%; }
+ }
+ .on-air-label {
+ display: inline-flex;
+ align-items: center;
+ gap: 8px;
+ font-family: 'DM Mono', monospace;
+ font-size: 0.58rem;
+ letter-spacing: 3px;
+ color: var(--red);
+ text-transform: uppercase;
+ margin-bottom: 28px;
+ }
+ .s-track-name {
+ font-family: 'Outfit', sans-serif;
+ font-weight: 700;
+ font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+ letter-spacing: -0.8px;
+ color: var(--ink);
+ margin-bottom: 8px;
+ transition: opacity 0.3s;
+ line-height: 1.1;
+ }
+ .s-track-artist {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.6rem;
+ letter-spacing: 2px;
+ color: var(--ink3);
+ text-transform: uppercase;
+ margin-bottom: 52px;
+ }
+ .s-stats {
+ display: flex;
+ gap: 48px;
+ }
+ .s-stat-val {
+ font-family: 'Outfit', sans-serif;
+ font-weight: 700;
+ font-size: 2rem;
+ color: var(--blue);
+ display: block;
+ letter-spacing: -1px;
+ line-height: 1;
+ }
+ .s-stat-key {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.52rem;
+ letter-spacing: 2px;
+ color: var(--ink3);
+ text-transform: uppercase;
+ margin-top: 5px;
+ display: block;
+ }
+ .stream-side {
+ background: var(--surface);
+ border: 1px solid var(--border);
+ border-left: none;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ gap: 28px;
+ padding: 40px 32px;
+ }
+ .play-btn {
+ width: 68px; height: 68px;
+ border-radius: 50%;
+ border: 1.5px solid var(--ink);
+ background: transparent;
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ transition: all 0.22s;
+ flex-shrink: 0;
+ }
+ .play-btn:hover { background: var(--ink); }
+ .play-btn svg { fill: var(--ink); transition: fill 0.22s; }
+ .play-btn:hover svg { fill: var(--bg); }
+ .play-btn.playing { border-color: var(--blue); }
+ .play-btn.playing svg { fill: var(--blue); }
+ .play-btn.playing:hover { background: var(--blue); }
+ .play-btn.playing:hover svg { fill: #fff; }
+ .vol-wrap { width: 100%; }
+ .vol-label-row {
+ display: flex;
+ justify-content: space-between;
+ font-family: 'DM Mono', monospace;
+ font-size: 0.52rem;
+ letter-spacing: 2px;
+ color: var(--ink3);
+ text-transform: uppercase;
+ margin-bottom: 10px;
+ }
+ input[type=range] {
+ -webkit-appearance: none;
+ width: 100%;
+ height: 1px;
+ background: var(--border);
+ outline: none;
+ cursor: pointer;
+ }
+ input[type=range]::-webkit-slider-thumb {
+ -webkit-appearance: none;
+ width: 10px; height: 10px;
+ border-radius: 50%;
+ background: var(--ink);
+ }
+ .next-box {
+ width: 100%;
+ border-top: 1px solid var(--border);
+ padding-top: 20px;
+ }
+ .next-lbl {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.52rem;
+ letter-spacing: 2px;
+ color: var(--ink3);
+ text-transform: uppercase;
+ margin-bottom: 7px;
+ }
+ .next-name {
+ font-family: 'Outfit', sans-serif;
+ font-weight: 600;
+ font-size: 0.85rem;
+ color: var(--ink);
+ letter-spacing: -0.2px;
+ }
+ .live-link {
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ width: 100%;
+ padding: 12px 16px;
+ background: var(--blue);
+ color: #fff;
+ font-family: 'DM Mono', monospace;
+ font-size: 0.62rem;
+ letter-spacing: 2px;
+ text-transform: uppercase;
+ text-decoration: none;
+ border: none;
+ transition: all 0.2s;
+ justify-content: center;
+ margin-top: 4px;
+ }
+ .live-link:hover {
+ background: #6b97ff;
+ box-shadow: 0 0 20px rgba(77,127,255,0.4);
+ }
+ /* ===== DJ GRID ===== */
+ .dj-grid {
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: 2px;
+ }
+ .dj-card {
+ background: var(--surface);
+ border: 1px solid var(--border);
+ padding: 32px;
+ position: relative;
+ overflow: hidden;
+ cursor: pointer;
+ display: flex;
+ flex-direction: column;
+ transition: border-color 0.2s, box-shadow 0.2s;
+ }
+ .dj-card:hover {
+ border-color: rgba(77,127,255,0.4);
+ box-shadow: 0 4px 32px rgba(30,60,180,0.2);
+ z-index: 1;
+ }
+ .dj-top-bar {
+ position: absolute;
+ top: 0; left: 0; right: 0;
+ height: 3px;
+ transform: scaleX(0);
+ transform-origin: left;
+ transition: transform 0.35s ease;
+ }
+ .dj-card:hover .dj-top-bar { transform: scaleX(1); }
+ .dj-index {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.58rem;
+ letter-spacing: 2px;
+ color: var(--ink3);
+ margin-bottom: 28px;
+ text-transform: uppercase;
+ }
+ .dj-avatar {
+ width: 52px; height: 52px;
+ border-radius: 50%;
+ margin-bottom: 20px;
+ }
+ .dj-name {
+ font-family: 'Outfit', sans-serif;
+ font-weight: 800;
+ font-size: 1.55rem;
+ letter-spacing: -0.8px;
+ color: var(--ink);
+ line-height: 1;
+ margin-bottom: 7px;
+ }
+ .dj-genre {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.58rem;
+ letter-spacing: 2px;
+ text-transform: uppercase;
+ margin-bottom: 24px;
+ flex: 1;
+ }
+ .dj-time {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.58rem;
+ letter-spacing: 1px;
+ color: var(--ink3);
+ text-transform: uppercase;
+ border-top: 1px solid var(--border);
+ padding-top: 14px;
+ }
+ .g1 { background: linear-gradient(135deg, #e8d5ff, #c5b0f5); }
+ .g2 { background: linear-gradient(135deg, #d0eeff, #96d2f0); }
+ .g3 { background: linear-gradient(135deg, #ffeacc, #ffc285); }
+ .g4 { background: linear-gradient(135deg, #d4f5e9, #8fd9bd); }
+ .g5 { background: linear-gradient(135deg, #fce4ec, #f09aaa); }
+ .g6 { background: linear-gradient(135deg, #e8eaf6, #a4aede); }
+ /* ===== MONTHLY LINEUP ===== */
+ .lineups-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
+ @media (max-width: 768px) { .lineups-grid { grid-template-columns: 1fr; } }
+ .lineup-section { margin-top: 0; border: 1px solid var(--border); overflow: hidden; }
+ .lineup-header { background: rgba(77,127,255,0.06); border-bottom: 1px solid var(--border); padding: 20px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+ .lineup-month { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 3px; color: var(--blue); }
+ .lineup-event { font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--ink); font-weight: 700; }
+ .lineup-list { display: flex; flex-direction: column; }
+ .lineup-row { display: grid; grid-template-columns: 160px 1fr; align-items: center; padding: 16px 28px; border-bottom: 1px solid var(--border); gap: 20px; transition: background 0.2s; }
+ .lineup-row:last-child { border-bottom: none; }
+ .lineup-row:hover { background: rgba(77,127,255,0.04); }
+ .lineup-time { font-family: 'DM Mono', monospace; font-size: 0.75rem; letter-spacing: 2px; color: var(--ink3); }
+ .lineup-dj { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--ink); }
+ .lineup-genre { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); background: rgba(77,127,255,0.1); padding: 4px 10px; white-space: nowrap; }
+ /* ===== CONTACT ===== */
+ .contact-layout { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+ .contact-card { border: 1px solid var(--border); padding: 32px 28px; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.2s; }
+ .contact-card:hover { border-color: var(--blue); }
+ .contact-icon { font-size: 1.8rem; }
+ .contact-label { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 3px; text-transform: uppercase; color: var(--blue); }
+ .contact-value { font-family: 'Outfit', sans-serif; font-size: 0.95rem; color: var(--ink); line-height: 1.6; flex: 1; }
+ .contact-link { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 2px; color: var(--ink3); text-decoration: none; transition: color 0.2s; }
+ .contact-link:hover { color: var(--blue); }
+ @media (max-width: 768px) { .contact-layout { grid-template-columns: 1fr; } }
+
+ /* ===== DJ SIGNUP ===== */
+ .signup-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 48px; align-items: start; }
+ .signup-intro { font-family: 'Outfit', sans-serif; font-size: 0.95rem; color: var(--ink2); line-height: 1.8; margin-bottom: 28px; }
+ .signup-features { display: flex; flex-direction: column; gap: 12px; }
+ .signup-feature { font-family: 'Outfit', sans-serif; font-size: 0.88rem; color: var(--ink2); display: flex; align-items: center; gap: 12px; }
+ .signup-feature span { font-size: 1.2rem; }
+ .signup-form { display: flex; flex-direction: column; gap: 16px; }
+ .form-group { display: flex; flex-direction: column; gap: 6px; }
+ .form-label { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 3px; text-transform: uppercase; color: var(--ink3); }
+ .form-input { background: var(--surface); border: 1px solid var(--border); color: var(--ink); font-family: 'Outfit', sans-serif; font-size: 0.9rem; padding: 12px 16px; outline: none; transition: border-color 0.2s; }
+ .form-input:focus { border-color: var(--blue); }
+ .form-input::placeholder { color: var(--ink3); }
+ .form-textarea { resize: vertical; min-height: 90px; }
+ .form-submit { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 16px; background: var(--blue); border: none; color: #fff; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-top: 4px; }
+ .form-submit:hover { background: #6b97ff; box-shadow: 0 0 24px rgba(77,127,255,0.4); }
+ .form-success { font-family: 'Outfit', sans-serif; font-size: 0.88rem; color: #4caf7d; padding: 14px 16px; border: 1px solid rgba(76,175,125,0.3); background: rgba(76,175,125,0.06); text-align: center; }
+ @media (max-width: 960px) { .signup-layout { grid-template-columns: 1fr; gap: 28px; } }
+
+ /* ===== GALLERY ===== */
+ .gallery-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+ .gallery-tab { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 3px; text-transform: uppercase; padding: 10px 20px; background: transparent; border: 1px solid var(--border); color: var(--ink3); cursor: pointer; transition: all 0.2s; }
+ .gallery-tab.active { border-color: var(--blue); color: var(--blue); background: rgba(77,127,255,0.08); }
+ .gallery-tab:hover { border-color: var(--blue); color: var(--ink); }
+ .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+ .gallery-item { display: block; aspect-ratio: 4/3; overflow: hidden; border: 1px solid var(--border); transition: border-color 0.2s; text-decoration: none; }
+ .gallery-item:hover { border-color: var(--blue); }
+ .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+ .gallery-item:hover img { transform: scale(1.04); }
+ .gallery-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: var(--surface); color: var(--ink3); font-size: 1.8rem; }
+ .gallery-add { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 2px; text-transform: uppercase; }
+ .gallery-video { aspect-ratio: 16/9; overflow: hidden; border: 1px solid var(--border); }
+ .gallery-video iframe { width: 100%; height: 100%; border: none; }
+ .gallery-instructions { margin-top: 28px; padding: 20px 24px; background: rgba(77,127,255,0.04); border: 1px dashed var(--border); }
+ .gi-title { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; color: var(--blue); margin-bottom: 10px; }
+ .gi-steps { font-family: 'Outfit', sans-serif; font-size: 0.82rem; color: var(--ink3); line-height: 2; }
+ .gi-steps strong { color: var(--ink2); }
+ @media (max-width: 768px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
+ @media (max-width: 480px) { .gallery-grid { grid-template-columns: 1fr; } }
+
+ /* ===== ARCHIVE ===== */
+ .under-construction {
+ display: flex;flex-direction: column;align-items: center;justify-content: center;
+ padding: 60px 20px;border: 1px dashed var(--border);text-align: center;gap: 12px;
+ }
+ .uc-icon { font-size: 2.5rem; }
+ .uc-title { font-family: 'Bebas Neue', sans-serif;font-size: 2rem;letter-spacing: 4px;color: var(--ink); }
+ .uc-text { font-family: 'Outfit', sans-serif;font-size: 0.9rem;color: var(--ink3);letter-spacing: 1px; }
+ .archive-list { display: flex; flex-direction: column; }
+ .mix-row {
+ display: grid;
+ grid-template-columns: 52px 1fr 80px 38px;
+ align-items: center;
+ gap: 20px;
+ padding: 20px 0;
+ border-bottom: 1px solid var(--border);
+ cursor: pointer;
+ transition: all 0.15s;
+ }
+ .mix-row:first-child { border-top: 1px solid var(--border); }
+ .mix-row:hover {
+ background: var(--surface);
+ padding-left: 16px;
+ padding-right: 16px;
+ margin: 0 -16px;
+ }
+ .mix-num {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.65rem;
+ color: var(--ink3);
+ letter-spacing: 1px;
+ }
+ .mix-title {
+ font-family: 'Outfit', sans-serif;
+ font-weight: 600;
+ font-size: 1rem;
+ color: var(--ink);
+ letter-spacing: -0.3px;
+ margin-bottom: 5px;
+ }
+ .mix-meta {
+ display: flex;
+ gap: 14px;
+ align-items: center;
+ font-family: 'DM Mono', monospace;
+ font-size: 0.52rem;
+ letter-spacing: 1.5px;
+ color: var(--ink3);
+ text-transform: uppercase;
+ }
+ .mix-pill {
+ border: 1px solid var(--border);
+ padding: 2px 8px;
+ font-size: 0.5rem;
+ color: var(--ink2);
+ letter-spacing: 1px;
+ }
+ .mix-dur {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.7rem;
+ color: var(--ink2);
+ text-align: right;
+ letter-spacing: 1px;
+ }
+ .mix-dl {
+ width: 34px; height: 34px;
+ border: 1px solid var(--border);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 0.8rem;
+ color: var(--ink3);
+ cursor: pointer;
+ transition: all 0.18s;
+ justify-self: center;
+ }
+ .mix-dl:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+ /* ===== FOOTER ===== */
+ footer {
+ background: rgba(14,18,34,0.95);
+ border-top: 1px solid var(--border);
+ padding: 32px 52px;
+ display: grid;
+ grid-template-columns: 1fr 1fr 1fr;
+ align-items: end;
+ gap: 48px;
+ position: relative;
+ z-index: 1;
+ }
+ .footer-logo {
+ font-family: 'Bebas Neue', sans-serif;
+ font-size: 2.8rem;
+ letter-spacing: 4px;
+ color: var(--ink);
+ line-height: 0.9;
+ }
+ .footer-slogan {
+ font-family: 'Outfit', sans-serif;
+ font-size: 0.75rem;
+ font-style: italic;
+ color: var(--ink3);
+ letter-spacing: 1px;
+ margin-top: 6px;
+ font-weight: 400;
+ }
+ .footer-logo .outline {
+ color: transparent;
+ -webkit-text-stroke: 1.5px var(--blue);
+ display: block;
+ }
+ .footer-links {
+ display: flex;
+ flex-direction: column;
+ gap: 12px;
+ }
+ .footer-links a {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.62rem;
+ letter-spacing: 2px;
+ color: var(--ink2);
+ text-decoration: none;
+ text-transform: uppercase;
+ transition: color 0.2s;
+ }
+ .footer-links a:hover { color: var(--ink); }
+ .footer-right { text-align: right; }
+ .footer-freq {
+ font-family: 'Outfit', sans-serif;
+ font-weight: 700;
+ font-size: 1.8rem;
+ letter-spacing: -1px;
+ color: var(--ink);
+ margin-bottom: 8px;
+ }
+ .footer-copy {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.52rem;
+ letter-spacing: 2px;
+ color: var(--ink3);
+ text-transform: uppercase;
+ line-height: 2;
+ }
+ .section-line {
+ height: 1px;
+ background: var(--border);
+ max-width: 1320px;
+ margin: 0 auto 0;
+ }
+ .nav-signup-btn {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.58rem;
+ letter-spacing: 2px;
+ text-transform: uppercase;
+ padding: 9px 18px;
+ background: var(--blue);
+ color: #fff;
+ text-decoration: none;
+ border: none;
+ transition: all 0.2s;
+ white-space: nowrap;
+ }
+ .nav-signup-btn:hover { background: #6b97ff; box-shadow: 0 0 16px rgba(77,127,255,0.4); }
+
+ .mute-btn {
+ background: transparent;
+ border: 1px solid var(--border);
+ color: var(--ink2);
+ width: 34px; height: 34px;
+ display: flex; align-items: center; justify-content: center;
+ cursor: pointer;
+ transition: all 0.2s;
+ flex-shrink: 0;
+ }
+ .mute-btn:hover { border-color: var(--blue); color: var(--blue); }
+ .mute-btn.muted { color: var(--ink3); border-color: transparent; }
+ /* ===== STREAM BUTTONS ===== */
+ .stream-btns {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 16px;
+ }
+ .stream-big-btn {
+ display: flex;
+ align-items: center;
+ gap: 24px;
+ padding: 32px 36px;
+ text-decoration: none;
+ border: 1px solid var(--border);
+ transition: all 0.25s;
+ position: relative;
+ overflow: hidden;
+ }
+ .stream-big-btn::before {
+ content: '';
+ position: absolute;
+ inset: 0;
+ opacity: 0;
+ transition: opacity 0.25s;
+ }
+ .stream-big-btn.primary { background: var(--blue); border-color: var(--blue); }
+ .stream-big-btn.primary::before { background: rgba(255,255,255,0.08); }
+ .stream-big-btn.secondary { background: var(--surface); border-color: var(--border); }
+ .stream-big-btn.secondary::before { background: rgba(77,127,255,0.06); }
+ .stream-big-btn:hover::before { opacity: 1; }
+ .stream-big-btn.primary:hover { box-shadow: 0 0 40px rgba(77,127,255,0.4); transform: translateY(-2px); }
+ .stream-big-btn.secondary:hover { border-color: var(--blue); box-shadow: 0 0 24px rgba(77,127,255,0.15); transform: translateY(-2px); }
+ .stream-btn-icon {
+ flex-shrink: 0;
+ color: #fff;
+ opacity: 0.9;
+ }
+ .stream-big-btn.secondary .stream-btn-icon { color: var(--blue); }
+ .stream-btn-text {
+ display: flex;
+ flex-direction: column;
+ gap: 6px;
+ flex: 1;
+ }
+ .stream-btn-label {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.58rem;
+ letter-spacing: 3px;
+ text-transform: uppercase;
+ color: rgba(255,255,255,0.6);
+ }
+ .stream-big-btn.secondary .stream-btn-label { color: var(--ink3); }
+ .stream-btn-title {
+ font-family: 'Bebas Neue', sans-serif;
+ font-size: 1.7rem;
+ letter-spacing: 2px;
+ color: #fff;
+ line-height: 1;
+ }
+ .stream-big-btn.secondary .stream-btn-title { color: var(--ink); }
+ .stream-btn-arrow {
+ font-size: 1.4rem;
+ color: rgba(255,255,255,0.5);
+ transition: transform 0.2s;
+ }
+ .stream-big-btn.secondary .stream-btn-arrow { color: var(--ink3); }
+ .stream-big-btn:hover .stream-btn-arrow { transform: translateX(4px); }
+ @media (max-width: 640px) {
+ .stream-btns { grid-template-columns: 1fr; }
+ .stream-big-btn { padding: 24px; }
+ .stream-btn-title { font-size: 1.4rem; }
+ }
+ /* ===== COUNTDOWN ===== */
+ .countdown-section {
+ position: relative;
+ z-index: 1;
+ background: rgba(10,14,28,0.95);
+ border-top: 1px solid var(--border);
+ border-bottom: 1px solid var(--border);
+ padding: 28px 52px;
+ }
+ .countdown-inner {
+ max-width: 1320px;
+ margin: 0 auto;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 32px;
+ flex-wrap: wrap;
+ }
+ .countdown-date {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.7rem;
+ letter-spacing: 2px;
+ color: var(--ink);
+ margin-top: 4px;
+ font-weight: 700;
+ }
+ .countdown-col {
+ display: flex;
+ flex-direction: column;
+ gap: 16px;
+ flex: 1;
+ min-width: 280px;
+ }
+ .countdown-divider {
+ width: 1px;
+ height: 80px;
+ background: var(--border);
+ flex-shrink: 0;
+ }
+ .countdown-left {}
+ .countdown-label {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.6rem;
+ letter-spacing: 4px;
+ color: var(--blue);
+ text-transform: uppercase;
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ margin-bottom: 10px;
+ }
+ .countdown-label::before {
+ content: '';
+ width: 20px; height: 1px;
+ background: var(--blue);
+ box-shadow: 0 0 6px var(--blue);
+ }
+ .countdown-title {
+ font-family: 'Bebas Neue', sans-serif;
+ font-size: clamp(1.4rem, 3vw, 2.2rem);
+ letter-spacing: 3px;
+ color: var(--ink);
+ }
+ .countdown-blocks {
+ display: flex;
+ gap: 12px;
+ align-items: center;
+ }
+ .cd-block {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 6px;
+ min-width: 72px;
+ }
+ .cd-num {
+ font-family: 'Bebas Neue', sans-serif;
+ font-size: 3rem;
+ letter-spacing: 2px;
+ color: var(--ink);
+ background: rgba(77,127,255,0.06);
+ border: 1px solid var(--border);
+ padding: 8px 16px;
+ line-height: 1;
+ min-width: 72px;
+ text-align: center;
+ box-shadow: 0 0 20px rgba(77,127,255,0.08);
+ }
+ .cd-label {
+ font-family: 'DM Mono', monospace;
+ font-size: 0.48rem;
+ letter-spacing: 2px;
+ color: var(--ink3);
+ text-transform: uppercase;
+ }
+ .cd-sep {
+ font-family: 'Bebas Neue', sans-serif;
+ font-size: 2.5rem;
+ color: var(--blue);
+ opacity: 0.4;
+ margin-bottom: 20px;
+ }
+ /* ===== SOCIAL LINKS ===== */
+ .social-bar {
+ display: flex;
+ gap: 10px;
+ }
+ .social-btn {
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ padding: 10px 18px;
+ border: 1px solid var(--border);
+ background: transparent;
+ color: var(--ink2);
+ font-family: 'DM Mono', monospace;
+ font-size: 0.6rem;
+ letter-spacing: 2px;
+ text-transform: uppercase;
+ text-decoration: none;
+ transition: all 0.2s;
+ }
+ .social-btn:hover {
+ border-color: var(--blue);
+ color: var(--ink);
+ box-shadow: 0 0 16px rgba(77,127,255,0.2);
+ }
+ .social-btn svg {
+ flex-shrink: 0;
+ }
+ .footer-social {
+ display: flex;
+ gap: 10px;
+ margin-top: 16px;
+ }
+ .footer-social a {
+ width: 34px; height: 34px;
+ border: 1px solid var(--border);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ color: var(--ink3);
+ text-decoration: none;
+ transition: all 0.2s;
+ }
+ .footer-social a:hover {
+ border-color: var(--blue);
+ color: var(--blue);
+ box-shadow: 0 0 10px rgba(77,127,255,0.2);
+ }
+ @media (max-width: 960px) {
+ nav { padding: 0 24px; }
+ .nav-links { display: none; }
+ .section-wrap { padding: 24px 24px; }
+ .hero { padding: 64px 24px 0; }
+ .hero-side { display: none; }
+ .stream-layout { grid-template-columns: 1fr; }
+ .stream-side { border-left: 1px solid var(--border); border-top: none; }
+ .dj-grid { grid-template-columns: 1fr 1fr; }
+ footer { grid-template-columns: 1fr; gap: 24px; }
+ .footer-right { text-align: left; }
+ .countdown-section { padding: 24px 24px; }
+ .countdown-inner { flex-direction: column; align-items: flex-start; }
+ .stream-btns { grid-template-columns: 1fr; }
+ .lineup-row { grid-template-columns: 120px 1fr; }
+ .countdown-blocks { flex-wrap: wrap; gap: 8px; }
+ }
+ @media (max-width: 560px) {
+ .dj-grid { grid-template-columns: 1fr; }
+ .hero-title { font-size: clamp(4rem, 20vw, 8rem); letter-spacing: -3px; }
+ .cd-num { font-size: 2.2rem; min-width: 54px; padding: 6px 10px; }
+ .social-bar { flex-wrap: wrap; }
+ .stream-big-btn { padding: 20px; gap: 16px; }
+ .stream-btn-title { font-size: 1.3rem; }
+ .lineup-row { grid-template-columns: 1fr; gap: 2px; padding: 12px 16px; }
+ .lineup-time { font-size: 0.65rem; }
+ .countdown-col { min-width: unset; width: 100%; }
+ .countdown-divider { display: none; }
+ .lineup-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+ .lineup-month { font-size: 1.1rem; }
+ .hero-slogan { font-size: 0.85rem; }
+ }
+</style>
+</head>
+<body>
+
+<!-- COOKIE MELDING -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9998;background:#0b0f1c;border-top:1px solid rgba(80,120,255,0.2);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+ <div style="font-family:'Outfit',sans-serif;font-size:0.82rem;color:#8899cc;max-width:700px;line-height:1.6;">
+  🍪 Deze website gebruikt cookies voor een betere gebruikerservaring en anonieme statistieken. Door verder te gaan accepteer je ons cookiebeleid.
+  <a href="#" style="color:#4d7fff;text-decoration:underline;margin-left:6px;">Meer info</a>
+ </div>
+ <div style="display:flex;gap:10px;flex-shrink:0;">
+  <button onclick="localStorage.setItem('cookieConsent','rejected');document.getElementById('cookie-banner').style.display='none';" style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;padding:10px 18px;background:transparent;border:1px solid rgba(80,120,255,0.2);color:#4a5580;cursor:pointer;">Weigeren</button>
+  <button onclick="localStorage.setItem('cookieConsent','accepted');document.getElementById('cookie-banner').style.display='none';" style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;padding:10px 18px;background:#4d7fff;border:none;color:#fff;cursor:pointer;">Accepteren</button>
+ </div>
+</div>
+<audio id="bg-audio" loop autoplay preload="auto">
+ <source src="beat-compressed.mp3" type="audio/mpeg">
+</audio>
+<nav>
+ <a href="#" class="nav-logo">Club Delight</a>
+ <ul class="nav-links">
+ <li><a href="#djs">DJ Lineup</a></li>
+ <li><a href="#stream">Stream</a></li>
+ <li><a href="#aanmelden">DJ Aanmelden</a></li>
+ <li><a href="#instagram">Instagram</a></li>
+ <li><a href="#archive">Archief</a></li>
+ <li><a href="#contact">Contact</a></li>
+ </ul>
+ <div class="live-badge off-air" id="live-badge">
+ <div class="pulse-dot"></div>
+ <span id="live-badge-text">Off Air</span>
+ </div>
+ <button class="mute-btn" id="mute-btn" onclick="window.toggleMute()" title="Muziek aan/uit">
+ <svg id="mute-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+ </button>
+ <a href="#aanmelden" class="nav-signup-btn">DJ Aanmelden</a>
+</nav>
+<div class="hero">
+ <video class="hero-bg-img" autoplay muted loop playsinline>
+  <source src="hero-video.mp4" type="video/mp4">
+  <img src="pexels-mixer-1284507_1920.jpg" alt="">
+ </video>
+ <div class="hero-bg-gradient"></div>
+ <div class="hero-inner">
+ <p class="hero-eyebrow">Dance Radio — Est. 2008</p>
+ <h1 class="hero-title">
+ <span class="word-club">Club</span>
+ <span class="word-delight">Delight</span>
+ </h1>
+ <p class="hero-slogan">Only the best dancemusic</p>
+ </div>
+ <div class="hero-side">
+ <div class="hero-genre-item">House</div>
+ <div class="hero-genre-item">Techno</div>
+ <div class="hero-genre-item">Trance</div>
+ 
+ </div>
+ <div class="hero-bottom">
+ <div class="waveform-container" id="waveform"></div>
+ <span class="wave-label">Live · FM 105.8 MHz · DAB+</span>
+ </div>
+</div>
+<div class="ticker-wrap">
+ <div class="ticker-track">
+ <span>Club Delight Radio</span><span class="ticker-sep">·</span>
+ <span>Live every 1st Saturday of the month 21:00</span><span class="ticker-sep">·</span>
+ <span>House · Techno · Trance</span><span class="ticker-sep">·</span>
+ <span>Resolutions · DJ Mickiemick · DJ Kooski</span><span class="ticker-sep">·</span>
+ <span>🎧 Listen Live on RTW.NL</span><span class="ticker-sep">·</span>
+ <span>Club Delight Radio</span><span class="ticker-sep">·</span>
+ <span>Live every 1st Saturday of the month 21:00</span><span class="ticker-sep">·</span>
+ <span>House · Techno · Trance</span><span class="ticker-sep">·</span>
+ <span>Resolutions · DJ Mickiemick · DJ Kooski</span><span class="ticker-sep">·</span>
+ <span>🎧 Listen Live on RTW.NL</span><span class="ticker-sep">·</span>
+ </div>
+</div>
+<div class="countdown-section">
+ <div class="countdown-inner">
+ <div class="countdown-col">
+ <div class="countdown-left">
+ <div class="countdown-label">Club Night · 1e zaterdag v/d maand</div>
+ <div class="countdown-title">Live · 21:00 – 01:00</div>
+ <div class="countdown-date" id="cd-date">—</div>
+ </div>
+ <div class="countdown-blocks">
+ <div class="cd-block"><div class="cd-num" id="cd-days">00</div><div class="cd-label">Dagen</div></div>
+ <div class="cd-sep">:</div>
+ <div class="cd-block"><div class="cd-num" id="cd-hours">00</div><div class="cd-label">Uren</div></div>
+ <div class="cd-sep">:</div>
+ <div class="cd-block"><div class="cd-num" id="cd-mins">00</div><div class="cd-label">Minuten</div></div>
+ <div class="cd-sep">:</div>
+ <div class="cd-block"><div class="cd-num" id="cd-secs">00</div><div class="cd-label">Seconden</div></div>
+ </div>
+ </div>
+ <div class="countdown-divider"></div>
+ <div class="countdown-col">
+ <div class="countdown-left">
+ <div class="countdown-label" style="color:#c0395e">Wekelijkse uitzending · Elke zaterdag</div>
+ <div class="countdown-title">Regular · 21:00 – 01:00</div>
+ <div class="countdown-date" id="wd-date">—</div>
+ </div>
+ <div class="countdown-blocks">
+ <div class="cd-block"><div class="cd-num" id="wd-days">00</div><div class="cd-label">Dagen</div></div>
+ <div class="cd-sep" style="color:#c0395e">:</div>
+ <div class="cd-block"><div class="cd-num" id="wd-hours">00</div><div class="cd-label">Uren</div></div>
+ <div class="cd-sep" style="color:#c0395e">:</div>
+ <div class="cd-block"><div class="cd-num" id="wd-mins">00</div><div class="cd-label">Minuten</div></div>
+ <div class="cd-sep" style="color:#c0395e">:</div>
+ <div class="cd-block"><div class="cd-num" id="wd-secs">00</div><div class="cd-label">Seconden</div></div>
+ </div>
+ </div>
+ <div class="social-bar">
+ <a href="https://www.instagram.com/clubdelightradio/" target="_blank" class="social-btn">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+ Instagram
+ </a>
+ <a href="https://www.facebook.com/p/Clubdelight-100050300297548/" target="_blank" class="social-btn">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+ Facebook
+ </a>
+ <a href="https://www.tiktok.com/@clubdelight" target="_blank" class="social-btn">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+ TikTok
+ </a>
+ </div>
+ </div>
+</div>
+<div class="section-wrap" id="djs">
+ <div class="section-header">
+ <span class="section-num">01 — DJ's</span>
+ <h2 class="section-title">DJ Lineup</h2>
+ </div>
+
+ <!-- ============================================
+      LINEUP — HIER AANPASSEN
+      Regular: elke zaterdag
+      Club Night: 1e zaterdag van de maand
+ ============================================ -->
+ <div class="lineups-grid">
+
+  <!-- REGULAR LINEUP -->
+  <div class="lineup-section">
+   <div class="lineup-header">
+    <div class="lineup-month" style="color:#c0395e">🎧 Regular — Maart & April 2026</div>
+    <div class="lineup-event">Elke zaterdag · 21 & 28 maart · 11, 18 &amp; 25 april · 21:00 – 01:00</div>
+   </div>
+   <div class="lineup-list">
+    <div class="lineup-row">
+     <div class="lineup-time">21:00 – 22:00</div>
+     <div class="lineup-dj">P.H.S</div>
+    </div>
+    <div class="lineup-row">
+     <div class="lineup-time">22:00 – 23:00</div>
+     <div class="lineup-dj">Resolutions</div>
+    </div>
+    <div class="lineup-row">
+     <div class="lineup-time">23:00 – 24:00</div>
+     <div class="lineup-dj">Peter Blanc</div>
+    </div>
+    <div class="lineup-row">
+     <div class="lineup-time">24:00 – 01:00</div>
+     <div class="lineup-dj">Purple Desert Sessions</div>
+    </div>
+   </div>
+  </div>
+
+  <!-- CLUB NIGHT LINEUP -->
+  <div class="lineup-section">
+   <div class="lineup-header">
+    <div class="lineup-month" id="lineup-month">🔴 Live Broadcasting — April 2026</div>
+    <div class="lineup-event" id="lineup-date">Zaterdag 4 april 2026 · 21:00 – 01:00</div>
+   </div>
+   <div class="lineup-list">
+    <div class="lineup-row">
+     <div class="lineup-time">21:00 – 22:00</div>
+     <div class="lineup-dj">Ian Barras &amp; Perry Owens</div>
+    </div>
+    <div class="lineup-row">
+     <div class="lineup-time">22:00 – 23:00</div>
+     <div class="lineup-dj">Resolutions</div>
+    </div>
+    <div class="lineup-row">
+     <div class="lineup-time">23:00 – 24:00</div>
+     <div class="lineup-dj">DJ Mickiemick</div>
+    </div>
+    <div class="lineup-row">
+     <div class="lineup-time">24:00 – 01:00</div>
+     <div class="lineup-dj">Kooski</div>
+    </div>
+   </div>
+  </div>
+
+ </div>
+ <!-- ============ EINDE LINEUP ============ -->
+
+</div>
+<div class="section-line"></div>
+<div class="section-wrap" id="stream">
+ <div class="section-header">
+ <span class="section-num">02 — Live Stream</span>
+ <h2 class="section-title">Stream</h2>
+ </div>
+ <div class="stream-btns">
+ <a href="https://rtw.nl/kijk-en-luister-live/" target="_blank" class="stream-big-btn primary" onclick="muteAudio()">
+ <div class="stream-btn-icon">
+ <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
+ </div>
+ <div class="stream-btn-text">
+ <span class="stream-btn-label">Live uitzending</span>
+ <span class="stream-btn-title">Kijk &amp; Luister Live</span>
+ </div>
+ <div class="stream-btn-arrow">→</div>
+ </a>
+ <a href="https://rtw.nl/uitzending-gemist/" target="_blank" class="stream-big-btn secondary" onclick="muteAudio()">
+ <div class="stream-btn-icon">
+ <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+ </div>
+ <div class="stream-btn-text">
+ <span class="stream-btn-label">Eerder gemist?</span>
+ <span class="stream-btn-title">Uitzending Gemist</span>
+ </div>
+ <div class="stream-btn-arrow">→</div>
+ </a>
+ </div>
+</div>
+
+<div class="section-line"></div>
+
+<!-- DJ AANMELDEN -->
+<div class="section-wrap" id="aanmelden">
+ <div class="section-header">
+  <span class="section-num">03 — Join</span>
+  <h2 class="section-title">DJ Aanmelden</h2>
+ </div>
+ <div class="signup-layout">
+  <div class="signup-info">
+   <p class="signup-intro">Ben jij een DJ en wil je een live set draaien bij Club Delight? Meld je aan via het formulier en voeg je SoundCloud of mix link toe. We nemen zo snel mogelijk contact met je op!</p>
+   <div class="signup-features">
+    <div class="signup-feature"><span>🎧</span> Live set op FM 105.8 MHz · DAB+</div>
+    <div class="signup-feature"><span>📅</span> Elke 1e zaterdag van de maand</div>
+    <div class="signup-feature"><span>🌍</span> Bereik duizenden luisteraars</div>
+   </div>
+  </div>
+  <div class="signup-form" id="signup-form">
+   <div class="form-group">
+    <label class="form-label">DJ Naam *</label>
+    <input type="text" class="form-input" id="dj-name" placeholder="Jouw DJ naam">
+   </div>
+   <div class="form-group">
+    <label class="form-label">Email *</label>
+    <input type="email" class="form-input" id="dj-email" placeholder="jouw@email.com">
+   </div>
+   <div class="form-group">
+    <label class="form-label">SoundCloud / Mix link *</label>
+    <input type="url" class="form-input" id="dj-link" placeholder="https://soundcloud.com/jouw-profiel">
+   </div>
+   <div class="form-group">
+    <label class="form-label">Genre</label>
+    <input type="text" class="form-input" id="dj-genre" placeholder="bijv. House, Techno, Trance">
+   </div>
+   <div class="form-group">
+    <label class="form-label">Bericht (optioneel)</label>
+    <textarea class="form-input form-textarea" id="dj-message" placeholder="Vertel iets over jezelf..."></textarea>
+   </div>
+   <button class="form-submit" onclick="submitDJForm()">
+    <!-- Honeypot veld — onzichtbaar voor mensen, robots vullen dit in -->
+    <input type="text" name="website" id="honeypot" style="display:none;position:absolute;left:-9999px;" tabindex="-1" autocomplete="off">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    Aanmelden als DJ
+   </button>
+   <div class="form-success" id="form-success" style="display:none;">
+    ✅ Bedankt voor je aanmelding! We nemen zo snel mogelijk contact met je op.
+   </div>
+  </div>
+ </div>
+</div>
+
+<div class="section-line"></div>
+
+<!-- INSTAGRAM FEED -->
+<div class="section-wrap" id="instagram">
+ <div class="section-header">
+  <span class="section-num">04 — Social</span>
+  <h2 class="section-title">Instagram</h2>
+ </div>
+ <script src="https://elfsightcdn.com/platform.js" async></script>
+ <div class="elfsight-app-777dd354-8f3f-4401-b9ac-49f1f12f18ef" data-elfsight-app-lazy></div>
+</div>
+<div class="section-line"></div>
+<div class="section-wrap" id="archive">
+ <div class="section-header">
+ <span class="section-num">05 — Mixes</span>
+ <h2 class="section-title">Mix Archief</h2>
+ </div>
+ <div class="under-construction">
+   <div class="uc-icon">🔧</div>
+   <div class="uc-title">Under Construction</div>
+   <div class="uc-text">The mix archive will be available soon. Check back later!</div>
+ </div>
+</div>
+
+<div class="section-line"></div>
+
+<!-- CONTACT -->
+<div class="section-wrap" id="contact">
+ <div class="section-header">
+  <span class="section-num">06 — Contact</span>
+  <h2 class="section-title">Contact</h2>
+ </div>
+ <div class="contact-layout">
+  <div class="contact-card">
+   <div class="contact-icon">📍</div>
+   <div class="contact-label">Adres</div>
+   <div class="contact-value">Mauritslaan 55<br>2741 CE Waddinxveen</div>
+   <a href="https://maps.google.com/?q=Mauritslaan+55+Waddinxveen" target="_blank" class="contact-link">Bekijk op kaart →</a>
+  </div>
+  <div class="contact-card">
+   <div class="contact-icon">✉️</div>
+   <div class="contact-label">E-mail</div>
+   <div class="contact-value">info.clubdelight&#64;gmail.com</div>
+   <a href="/cdn-cgi/l/email-protection#3d54535b52135e51485f595851545a55497d5a505c5451135e5250" class="contact-link">Stuur een mail →</a>
+  </div>
+  <div class="contact-card">
+   <div class="contact-icon">🌐</div>
+   <div class="contact-label">Radiostation</div>
+   <div class="contact-value">RTW Radio<br>Waddinxveen</div>
+   <a href="https://rtw.nl" target="_blank" class="contact-link">Bezoek RTW.nl →</a>
+  </div>
+ </div>
+</div>
+
+<footer>
+ <div class="footer-logo">
+ Club<span class="outline">Delight</span>
+ <div class="footer-slogan">Only the best dancemusic</div>
+ </div>
+ <div class="footer-links">
+ <a href="#stream">Live Stream</a>
+ <a href="#djs">DJ Lineup</a>
+ <a href="#archive">Mix Archief</a>
+ <a href="#instagram">Instagram</a>
+ </div>
+ <div class="footer-right">
+ <div class="footer-freq">FM 105.8 MHz · DAB+</div>
+ <div class="footer-copy">© 2026 Club Delight Radio<br>Elke 1e zaterdag v/d maand vanaf 21:00</div>
+ <div class="footer-social">
+ <a href="https://www.instagram.com/clubdelightradio/" target="_blank" title="Instagram">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+ </a>
+ <a href="https://www.facebook.com/p/Clubdelight-100050300297548/" target="_blank" title="Facebook">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+ </a>
+ <a href="https://www.tiktok.com/@clubdelight" target="_blank" title="TikTok">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+ </a>
+ </div>
+ </div>
+</footer>
+<script>
+try {
+// ===== WAVEFORM =====
+var wf = document.getElementById('waveform');
+if (wf) {
+  for (var i = 0; i < 130; i++) {
+    var b = document.createElement('div');
+    b.className = 'bar' + (i % 12 === 0 ? ' accent' : (i % 3 === 0 ? ' active' : ''));
+    var h = Math.random() * 28 + 4;
+    b.style.setProperty('--h', h + 'px');
+    b.style.animationDuration = (0.5 + Math.random() * 1.1) + 's';
+    b.style.animationDelay = (Math.random() * 1.1) + 's';
+    wf.appendChild(b);
+  }
+}
+} catch(e) {}
+
+// ===== AUDIO =====
+var bgAudio = document.getElementById('bg-audio');
+if (bgAudio) {
+  bgAudio.volume = 0.3;
+  var events = ['click', 'touchstart', 'keydown'];
+  function tryPlay() {
+    bgAudio.play().then(function() {
+      events.forEach(function(e) { document.removeEventListener(e, tryPlay); });
+    }).catch(function() {});
+  }
+  events.forEach(function(e) { document.addEventListener(e, tryPlay); });
+}
+
+window.toggleMute = function() {
+  if (!bgAudio) return;
+  bgAudio.muted = !bgAudio.muted;
+  var btn = document.getElementById('mute-btn');
+  var icon = document.getElementById('mute-icon');
+  if (bgAudio.muted) {
+    bgAudio.pause();
+    if (btn) btn.classList.add('muted');
+    if (icon) icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>';
+  } else {
+    bgAudio.play();
+    if (btn) btn.classList.remove('muted');
+    if (icon) icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>';
+  }
+};
+
+window.muteAudio = function() {
+  if (!bgAudio) return;
+  bgAudio.muted = true;
+  bgAudio.pause();
+};
+
+// ===== COOKIE =====
+(function() {
+  if (!localStorage.getItem('cookieConsent')) {
+    var banner = document.getElementById('cookie-banner');
+    if (banner) banner.style.display = 'flex';
+  }
+})();
+
+// ===== DJ FORM =====
+window.submitDJForm = function() {
+  // Honeypot check — als dit veld is ingevuld is het een robot
+  var honeypot = document.getElementById('honeypot');
+  if (honeypot && honeypot.value !== '') return;
+
+  var name = document.getElementById('dj-name').value.trim();
+  var email = document.getElementById('dj-email').value.trim();
+  var link = document.getElementById('dj-link').value.trim();
+  if (!name || !email || !link) {
+    alert('Vul alle verplichte velden in (DJ naam, email en mix link).');
+    return;
+  }
+  var genre = document.getElementById('dj-genre').value.trim();
+  var message = document.getElementById('dj-message').value.trim();
+  var btn = document.querySelector('.form-submit');
+  btn.textContent = 'Verzenden...';
+  btn.disabled = true;
+  emailjs.send('service_qw7ob0f', 'template_97laa1k', {
+    dj_name: name,
+    dj_email: email,
+    dj_link: link,
+    dj_genre: genre || 'Niet opgegeven',
+    dj_message: message || 'Geen bericht'
+  }).then(function() {
+    document.getElementById('form-success').style.display = 'block';
+    btn.textContent = '\u2713 Verzonden!';
+  }, function(error) {
+    alert('Fout bij verzenden: ' + JSON.stringify(error));
+    btn.textContent = 'Aanmelden als DJ';
+    btn.disabled = false;
+  });
+};
+
+// ===== COUNTDOWN =====
+function getNextFirstSaturday() {
+  var now = new Date();
+  var year = now.getFullYear();
+  var month = now.getMonth();
+  function firstSatOf(y, m) {
+    var d = new Date(y, m, 1, 21, 0, 0);
+    while (d.getDay() !== 6) d.setDate(d.getDate() + 1);
+    return d;
+  }
+  var next = firstSatOf(year, month);
+  if (now >= next) {
+    month++;
+    if (month > 11) { month = 0; year++; }
+    next = firstSatOf(year, month);
+  }
+  return next;
+}
+
+function getNextSaturday() {
+  var now = new Date();
+  var d = new Date(now);
+  var day = d.getDay();
+  var daysUntilSat = (6 - day + 7) % 7 || 7;
+  d.setDate(d.getDate() + daysUntilSat);
+  d.setHours(21, 0, 0, 0);
+  if (day === 6 && now >= d) d.setDate(d.getDate() + 7);
+  return d;
+}
+
+function setCountdown(diff, ids) {
+  if (diff <= 0) {
+    ids.forEach(function(id) { var el = document.getElementById(id); if (el) el.textContent = '00'; });
+    return;
+  }
+  var vals = [
+    Math.floor(diff / 864e5),
+    Math.floor((diff % 864e5) / 36e5),
+    Math.floor((diff % 36e5) / 6e4),
+    Math.floor((diff % 6e4) / 1e3)
+  ];
+  ids.forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = String(vals[i]).padStart(2, '0');
+  });
+}
+
+function isLiveNow() {
+  var now = new Date();
+  var day = now.getDay();
+  var timeMin = now.getHours() * 60 + now.getMinutes();
+  if (day === 6 && timeMin >= 21 * 60) return true;
+  if (day === 0 && timeMin < 60) return true;
+  return false;
+}
+
+function updateCountdowns() {
+  try {
+  var now = new Date();
+  var nl = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
+  var months = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+  var cd = getNextFirstSaturday();
+  var wd = getNextSaturday();
+  setCountdown(cd - now, ['cd-days','cd-hours','cd-mins','cd-secs']);
+  setCountdown(wd - now, ['wd-days','wd-hours','wd-mins','wd-secs']);
+  var cdEl = document.getElementById('cd-date');
+  var wdEl = document.getElementById('wd-date');
+  if (cdEl) cdEl.textContent = nl[cd.getDay()] + ' ' + cd.getDate() + ' ' + months[cd.getMonth()] + ' ' + cd.getFullYear() + ' · 21:00';
+  if (wdEl) wdEl.textContent = nl[wd.getDay()] + ' ' + wd.getDate() + ' ' + months[wd.getMonth()] + ' ' + wd.getFullYear() + ' · 21:00';
+  var badge = document.getElementById('live-badge');
+  var badgeText = document.getElementById('live-badge-text');
+  if (badge && badgeText) {
+    if (isLiveNow()) {
+      badge.classList.remove('off-air');
+      badgeText.textContent = 'On Air';
+    } else {
+      badge.classList.add('off-air');
+      badgeText.textContent = 'Off Air';
+    }
+  }
+  } catch(e) { console.error('Countdown error:', e); }
+}
+
+updateCountdowns();
+setInterval(updateCountdowns, 1000);
+
+// ===== LINEUP DATE =====
+(function() {
+  var months = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+  var monthsNL = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
+  function firstSatOf(y, m) { var d = new Date(y, m, 1, 21, 0, 0); while (d.getDay() !== 6) d.setDate(d.getDate() + 1); return d; }
+  var now = new Date(); var y = now.getFullYear(), m = now.getMonth();
+  var next = firstSatOf(y, m);
+  if (now > next) { m++; if (m > 11) { m = 0; y++; } next = firstSatOf(y, m); }
+  var el1 = document.getElementById('lineup-month');
+  var el2 = document.getElementById('lineup-date');
+  if (el1) el1.textContent = '\uD83D\uDD34 Live Broadcasting — Zaterdag ' + next.getDate() + ' ' + monthsNL[m
