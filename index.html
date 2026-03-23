@@ -44,8 +44,8 @@
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@100;300;400;600;700;900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>emailjs.init('4qaykfNRl7xrHnFpD');</script>
 <script>
+emailjs.init('4qaykfNRl7xrHnFpD');
 // Early function definitions — beschikbaar voor DOM laden
 window.toggleMute = function() {
   var bgAudio = document.getElementById('bg-audio');
@@ -294,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function() {
  height: 100%;
  object-fit: cover;
  object-position: center;
- filter: brightness(0.5) saturate(0.8) blur(0px);
+ filter: brightness(0.75) saturate(0.9) blur(0px);
  z-index: 0;
  transform: scale(1.05);
  }
@@ -1659,39 +1659,6 @@ window.muteAudio = function() {
 })();
 
 // ===== DJ FORM =====
-window.submitDJForm = function() {
-  // Honeypot check — als dit veld is ingevuld is het een robot
-  var honeypot = document.getElementById('honeypot');
-  if (honeypot && honeypot.value !== '') return;
-
-  var name = document.getElementById('dj-name').value.trim();
-  var email = document.getElementById('dj-email').value.trim();
-  var link = document.getElementById('dj-link').value.trim();
-  if (!name || !email || !link) {
-    alert('Vul alle verplichte velden in (DJ naam, email en mix link).');
-    return;
-  }
-  var genre = document.getElementById('dj-genre').value.trim();
-  var message = document.getElementById('dj-message').value.trim();
-  var btn = document.querySelector('.form-submit');
-  btn.textContent = 'Verzenden...';
-  btn.disabled = true;
-  emailjs.send('service_qw7ob0f', 'template_97laa1k', {
-    dj_name: name,
-    dj_email: email,
-    dj_link: link,
-    dj_genre: genre || 'Niet opgegeven',
-    dj_message: message || 'Geen bericht'
-  }).then(function() {
-    document.getElementById('form-success').style.display = 'block';
-    btn.textContent = '\u2713 Verzonden!';
-  }, function(error) {
-    alert('Fout bij verzenden: ' + JSON.stringify(error));
-    btn.textContent = 'Aanmelden als DJ';
-    btn.disabled = false;
-  });
-};
-
 // ===== COUNTDOWN =====
 function getNextFirstSaturday() {
   var now = new Date();
