@@ -988,6 +988,36 @@ document.addEventListener('DOMContentLoaded', function() {
  }
  .mute-btn:hover { border-color: var(--blue); color: var(--blue); }
  .mute-btn.muted { color: var(--ink3); border-color: transparent; }
+ /* ===== SOUNDCLOUD PLAYER ===== */
+ .sc-player-bar {
+  position: sticky;
+  top: 56px;
+  z-index: 99;
+  background: rgba(10,14,28,0.98);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+ }
+ .sc-player-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 6px 52px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+ }
+ .sc-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--blue);
+  white-space: nowrap;
+  flex-shrink: 0;
+ }
+
  /* ===== STREAM BUTTONS ===== */
  .stream-btns {
  display: grid;
@@ -1278,6 +1308,19 @@ document.addEventListener('DOMContentLoaded', function() {
  </button>
  <a href="#aanmelden" class="nav-signup-btn">DJ Aanmelden</a>
 </nav>
+
+<!-- SOUNDCLOUD PLAYER -->
+<div class="sc-player-bar">
+ <div class="sc-player-inner">
+  <div class="sc-label">
+   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.56 8.87V17h8.76c1.47-.01 2.68-1.22 2.68-2.7 0-1.48-1.21-2.69-2.68-2.69-.19 0-.37.02-.55.06C19.6 9.6 18.04 8.5 16.24 8.5c-.56 0-1.1.13-1.57.36-.28-2.1-2.08-3.72-4.27-3.72-2.38 0-4.32 1.94-4.32 4.33 0 .16.01.31.03.46C4.69 9.93 3.5 11.17 3.5 12.7c0 1.48 1.21 2.7 2.68 2.7h1.63V8.87c0-.68.55-1.23 1.23-1.23.67 0 1.22.55 1.22 1.23z"/></svg>
+   <span>SoundCloud — Club Delight</span>
+  </div>
+  <iframe id="sc-iframe" scrolling="no" frameborder="no" allow="autoplay"
+   src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/resolutions&color=%234d7fff&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false"
+   style="width:100%;height:36px;border:none;"></iframe>
+ </div>
+</div>
 <div class="hero">
  <video class="hero-bg-img" autoplay muted loop playsinline>
   <source src="hero-video.mp4" type="video/mp4">
@@ -1561,7 +1604,7 @@ document.addEventListener('DOMContentLoaded', function() {
    <div class="contact-icon">✉️</div>
    <div class="contact-label">E-mail</div>
    <div class="contact-value">info.clubdelight&#64;gmail.com</div>
-   <a href="mailto:info.clubdelight@gmail.com" class="contact-link">Stuur een mail →</a>
+   <a href="/cdn-cgi/l/email-protection#aec7c0c8c180cdc2dbcccacbc2c7c9c6daeec9c3cfc7c280cdc1c3" class="contact-link">Stuur een mail →</a>
   </div>
   <div class="contact-card">
    <div class="contact-icon">🌐</div>
@@ -1599,7 +1642,7 @@ document.addEventListener('DOMContentLoaded', function() {
  </div>
  </div>
 </footer>
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 try {
 // ===== WAVEFORM =====
 var wf = document.getElementById('waveform');
@@ -1755,5 +1798,4 @@ setInterval(updateCountdowns, 1000);
   var next = firstSatOf(y, m);
   if (now > next) { m++; if (m > 11) { m = 0; y++; } next = firstSatOf(y, m); }
   var el1 = document.getElementById('lineup-month');
-  var el2 = document.getElementById('lineup-date');
-  if (el1) el1.textContent = '\uD83D\uDD34 Live Broadcasting — Zaterdag ' + next.getDate() + ' ' + monthsNL[m
+  var 
