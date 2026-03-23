@@ -988,35 +988,14 @@ document.addEventListener('DOMContentLoaded', function() {
  }
  .mute-btn:hover { border-color: var(--blue); color: var(--blue); }
  .mute-btn.muted { color: var(--ink3); border-color: transparent; }
- /* ===== SOUNDCLOUD PLAYER ===== */
- .sc-player-bar {
-  position: sticky;
-  top: 56px;
-  z-index: 99;
-  background: rgba(10,14,28,0.98);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(10px);
- }
- .sc-player-inner {
-  max-width: 1320px;
-  margin: 0 auto;
-  padding: 6px 52px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
- }
- .sc-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.58rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--blue);
-  white-space: nowrap;
-  flex-shrink: 0;
- }
+ /* ===== SOUNDCLOUD SECTION ===== */
+ .sc-section { display: grid; grid-template-columns: 280px 1fr; gap: 40px; align-items: start; }
+ .sc-info-label { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 3px; color: var(--ink); margin-bottom: 12px; }
+ .sc-info-text { font-family: 'Outfit', sans-serif; font-size: 0.9rem; color: var(--ink2); line-height: 1.7; margin-bottom: 24px; }
+ .sc-follow-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; background: #f50; color: #fff; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
+ .sc-follow-btn:hover { background: #ff6600; box-shadow: 0 0 20px rgba(255,80,0,0.3); }
+ .sc-player-wrap { border: 1px solid var(--border); overflow: hidden; }
+ @media (max-width: 768px) { .sc-section { grid-template-columns: 1fr; } }
 
  /* ===== STREAM BUTTONS ===== */
  .stream-btns {
@@ -1286,15 +1265,14 @@ document.addEventListener('DOMContentLoaded', function() {
   <button onclick="localStorage.setItem('cookieConsent','accepted');document.getElementById('cookie-banner').style.display='none';" style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;padding:10px 18px;background:#4d7fff;border:none;color:#fff;cursor:pointer;">Accepteren</button>
  </div>
 </div>
-<audio id="bg-audio" loop autoplay preload="auto">
- <source src="beat-compressed.mp3" type="audio/mpeg">
-</audio>
+
 <nav>
  <a href="#" class="nav-logo">Club Delight</a>
  <ul class="nav-links">
  <li><a href="#djs">DJ Lineup</a></li>
  <li><a href="#stream">Stream</a></li>
  <li><a href="#aanmelden">DJ Aanmelden</a></li>
+ <li><a href="#soundcloud">SoundCloud</a></li>
  <li><a href="#instagram">Instagram</a></li>
  <li><a href="#archive">Archief</a></li>
  <li><a href="#contact">Contact</a></li>
@@ -1309,18 +1287,6 @@ document.addEventListener('DOMContentLoaded', function() {
  <a href="#aanmelden" class="nav-signup-btn">DJ Aanmelden</a>
 </nav>
 
-<!-- SOUNDCLOUD PLAYER -->
-<div class="sc-player-bar">
- <div class="sc-player-inner">
-  <div class="sc-label">
-   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.56 8.87V17h8.76c1.47-.01 2.68-1.22 2.68-2.7 0-1.48-1.21-2.69-2.68-2.69-.19 0-.37.02-.55.06C19.6 9.6 18.04 8.5 16.24 8.5c-.56 0-1.1.13-1.57.36-.28-2.1-2.08-3.72-4.27-3.72-2.38 0-4.32 1.94-4.32 4.33 0 .16.01.31.03.46C4.69 9.93 3.5 11.17 3.5 12.7c0 1.48 1.21 2.7 2.68 2.7h1.63V8.87c0-.68.55-1.23 1.23-1.23.67 0 1.22.55 1.22 1.23z"/></svg>
-   <span>SoundCloud — Club Delight</span>
-  </div>
-  <iframe id="sc-iframe" scrolling="no" frameborder="no" allow="autoplay"
-   src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/resolutions&color=%234d7fff&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false"
-   style="width:100%;height:36px;border:none;"></iframe>
- </div>
-</div>
 <div class="hero">
  <video class="hero-bg-img" autoplay muted loop playsinline>
   <source src="hero-video.mp4" type="video/mp4">
@@ -1615,6 +1581,31 @@ document.addEventListener('DOMContentLoaded', function() {
  </div>
 </div>
 
+<div class="section-line"></div>
+
+<!-- SOUNDCLOUD -->
+<div class="section-wrap" id="soundcloud">
+ <div class="section-header">
+  <span class="section-num">07 — Mixes</span>
+  <h2 class="section-title">SoundCloud</h2>
+ </div>
+ <div class="sc-section">
+  <div class="sc-info">
+   <div class="sc-info-label">Club Delight Radio</div>
+   <p class="sc-info-text">Luister naar onze mixes en sets via SoundCloud. Alle tracks van onze DJ's op één plek.</p>
+   <a href="https://soundcloud.com/resolutions" target="_blank" class="sc-follow-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.56 8.87V17h8.76c1.47-.01 2.68-1.22 2.68-2.7 0-1.48-1.21-2.69-2.68-2.69-.19 0-.37.02-.55.06C19.6 9.6 18.04 8.5 16.24 8.5c-.56 0-1.1.13-1.57.36-.28-2.1-2.08-3.72-4.27-3.72-2.38 0-4.32 1.94-4.32 4.33 0 .16.01.31.03.46C4.69 9.93 3.5 11.17 3.5 12.7c0 1.48 1.21 2.7 2.68 2.7h1.63V8.87c0-.68.55-1.23 1.23-1.23.67 0 1.22.55 1.22 1.23z"/></svg>
+    Volg op SoundCloud
+   </a>
+  </div>
+  <div class="sc-player-wrap">
+   <iframe scrolling="no" frameborder="no" allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/resolutions&color=%234d7fff&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true"
+    style="width:100%;height:300px;border:none;"></iframe>
+  </div>
+ </div>
+</div>
+
 <footer>
  <div class="footer-logo">
  Club<span class="outline">Delight</span>
@@ -1624,6 +1615,7 @@ document.addEventListener('DOMContentLoaded', function() {
  <a href="#stream">Live Stream</a>
  <a href="#djs">DJ Lineup</a>
  <a href="#archive">Mix Archief</a>
+ <a href="#soundcloud">SoundCloud</a>
  <a href="#instagram">Instagram</a>
  </div>
  <div class="footer-right">
