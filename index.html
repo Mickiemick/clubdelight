@@ -105,7 +105,15 @@ window.submitDJForm = function() {
     if (!iframe) return;
     try {
       var widget = SC.Widget(iframe);
-      widget.play();
+      widget.bind(SC.Widget.Events.READY, function() {
+        widget.getSounds(function(sounds) {
+          if (sounds && sounds.length > 0) {
+            var randomIndex = Math.floor(Math.random() * sounds.length);
+            widget.skip(randomIndex);
+            widget.play();
+          }
+        });
+      });
       scStarted = true;
     } catch(e) {}
   }
