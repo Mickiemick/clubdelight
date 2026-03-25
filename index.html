@@ -45,7 +45,7 @@
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@100;300;400;600;700;900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script src="https://w.soundcloud.com/player/api.js"></script>
+
 <script>
 emailjs.init('4qaykfNRl7xrHnFpD');
 // Early function definitions — beschikbaar voor DOM laden
@@ -96,32 +96,7 @@ window.submitDJForm = function() {
   });
 };
 
-// ===== SOUNDCLOUD AUTOPLAY =====
-(function() {
-  var scStarted = false;
-  function startSC() {
-    if (scStarted) return;
-    var iframe = document.getElementById('sc-widget');
-    if (!iframe) return;
-    try {
-      var widget = SC.Widget(iframe);
-      widget.bind(SC.Widget.Events.READY, function() {
-        widget.getSounds(function(sounds) {
-          if (sounds && sounds.length > 0) {
-            var randomIndex = Math.floor(Math.random() * sounds.length);
-            widget.skip(randomIndex);
-            widget.play();
-          }
-        });
-      });
-      scStarted = true;
-    } catch(e) {}
-  }
-  // Start bij eerste klik
-  ['click','touchstart','keydown'].forEach(function(e) {
-    document.addEventListener(e, startSC, {once: true});
-  });
-})();
+// ===== MIXCLOUD PLAYER =====
 
 // ===== COUNTDOWN =====
 function getNextFirstSaturday() {
@@ -1300,7 +1275,7 @@ document.addEventListener('DOMContentLoaded', function() {
  <li><a href="#djs">DJ Lineup</a></li>
  <li><a href="#stream">Stream</a></li>
  <li><a href="#aanmelden">DJ Aanmelden</a></li>
- <li><a href="#soundcloud">SoundCloud</a></li>
+ <li><a href="#mixcloud">Mixcloud</a></li>
  <li><a href="#instagram">Instagram</a></li>
  <li><a href="#archive">Archief</a></li>
  <li><a href="#contact">Contact</a></li>
@@ -1358,23 +1333,6 @@ document.addEventListener('DOMContentLoaded', function() {
  <div class="countdown-inner">
  <div class="countdown-col">
  <div class="countdown-left">
- <div class="countdown-label">Club Night · 1e zaterdag v/d maand</div>
- <div class="countdown-title">Live · 21:00 – 01:00</div>
- <div class="countdown-date" id="cd-date">—</div>
- </div>
- <div class="countdown-blocks">
- <div class="cd-block"><div class="cd-num" id="cd-days">00</div><div class="cd-label">Dagen</div></div>
- <div class="cd-sep">:</div>
- <div class="cd-block"><div class="cd-num" id="cd-hours">00</div><div class="cd-label">Uren</div></div>
- <div class="cd-sep">:</div>
- <div class="cd-block"><div class="cd-num" id="cd-mins">00</div><div class="cd-label">Minuten</div></div>
- <div class="cd-sep">:</div>
- <div class="cd-block"><div class="cd-num" id="cd-secs">00</div><div class="cd-label">Seconden</div></div>
- </div>
- </div>
- <div class="countdown-divider"></div>
- <div class="countdown-col">
- <div class="countdown-left">
  <div class="countdown-label" style="color:#c0395e">Wekelijkse uitzending · Elke zaterdag</div>
  <div class="countdown-title">Regular · 21:00 – 01:00</div>
  <div class="countdown-date" id="wd-date">—</div>
@@ -1387,6 +1345,23 @@ document.addEventListener('DOMContentLoaded', function() {
  <div class="cd-block"><div class="cd-num" id="wd-mins">00</div><div class="cd-label">Minuten</div></div>
  <div class="cd-sep" style="color:#c0395e">:</div>
  <div class="cd-block"><div class="cd-num" id="wd-secs">00</div><div class="cd-label">Seconden</div></div>
+ </div>
+ </div>
+ <div class="countdown-divider"></div>
+ <div class="countdown-col">
+ <div class="countdown-left">
+ <div class="countdown-label">Club Night · 1e zaterdag v/d maand</div>
+ <div class="countdown-title">Live · 21:00 – 01:00</div>
+ <div class="countdown-date" id="cd-date">—</div>
+ </div>
+ <div class="countdown-blocks">
+ <div class="cd-block"><div class="cd-num" id="cd-days">00</div><div class="cd-label">Dagen</div></div>
+ <div class="cd-sep">:</div>
+ <div class="cd-block"><div class="cd-num" id="cd-hours">00</div><div class="cd-label">Uren</div></div>
+ <div class="cd-sep">:</div>
+ <div class="cd-block"><div class="cd-num" id="cd-mins">00</div><div class="cd-label">Minuten</div></div>
+ <div class="cd-sep">:</div>
+ <div class="cd-block"><div class="cd-num" id="cd-secs">00</div><div class="cd-label">Seconden</div></div>
  </div>
  </div>
  <div class="social-bar">
@@ -1514,7 +1489,7 @@ document.addEventListener('DOMContentLoaded', function() {
  </div>
  <div class="signup-layout">
   <div class="signup-info">
-   <p class="signup-intro">Ben jij een DJ en wil je een live set draaien bij Club Delight? Meld je aan via het formulier en voeg je SoundCloud of mix link toe. We nemen zo snel mogelijk contact met je op!</p>
+   <p class="signup-intro">Ben jij een DJ en wil je een live set draaien bij Club Delight? Meld je aan via het formulier en voeg je Mixcloud of mix link toe. We nemen zo snel mogelijk contact met je op!</p>
    <div class="signup-features">
     <div class="signup-feature"><span>🎧</span> Live set op FM 105.8 MHz · DAB+</div>
     <div class="signup-feature"><span>📅</span> Elke 1e zaterdag van de maand</div>
@@ -1531,8 +1506,8 @@ document.addEventListener('DOMContentLoaded', function() {
     <input type="email" class="form-input" id="dj-email" placeholder="jouw@email.com">
    </div>
    <div class="form-group">
-    <label class="form-label">SoundCloud / Mix link *</label>
-    <input type="url" class="form-input" id="dj-link" placeholder="https://soundcloud.com/jouw-profiel">
+    <label class="form-label">Mixcloud / Mix link *</label>
+    <input type="url" class="form-input" id="dj-link" placeholder="https://mixcloud.com/jouw-profiel">
    </div>
    <div class="form-group">
     <label class="form-label">Genre</label>
@@ -1612,23 +1587,23 @@ document.addEventListener('DOMContentLoaded', function() {
 <div class="section-line"></div>
 
 <!-- SOUNDCLOUD -->
-<div class="section-wrap" id="soundcloud">
+<div class="section-wrap" id="mixcloud">
  <div class="section-header">
   <span class="section-num">07 — Mixes</span>
-  <h2 class="section-title">SoundCloud</h2>
+  <h2 class="section-title">Mixcloud</h2>
  </div>
  <div class="sc-section">
   <div class="sc-info">
    <div class="sc-info-label">Club Delight Radio</div>
-   <p class="sc-info-text">Luister naar onze mixes en sets via SoundCloud. Alle tracks van onze DJ's op één plek.</p>
-   <a href="https://soundcloud.com/resolutions" target="_blank" class="sc-follow-btn">
+   <p class="sc-info-text">Luister naar onze mixes en sets via Mixcloud. Alle tracks van onze DJ's op één plek.</p>
+   <a href="https://www.mixcloud.com/ClubDelight/" target="_blank" class="sc-follow-btn">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.56 8.87V17h8.76c1.47-.01 2.68-1.22 2.68-2.7 0-1.48-1.21-2.69-2.68-2.69-.19 0-.37.02-.55.06C19.6 9.6 18.04 8.5 16.24 8.5c-.56 0-1.1.13-1.57.36-.28-2.1-2.08-3.72-4.27-3.72-2.38 0-4.32 1.94-4.32 4.33 0 .16.01.31.03.46C4.69 9.93 3.5 11.17 3.5 12.7c0 1.48 1.21 2.7 2.68 2.7h1.63V8.87c0-.68.55-1.23 1.23-1.23.67 0 1.22.55 1.22 1.23z"/></svg>
-    Volg op SoundCloud
+    Volg op Mixcloud
    </a>
   </div>
   <div class="sc-player-wrap">
    <iframe id="sc-widget" scrolling="no" frameborder="no" allow="autoplay"
-    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/resolutions&color=%234d7fff&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true"
+    src="https://w.mixcloud.com/player/?url=https%3A//mixcloud.com/ClubDelight/&color=%234d7fff&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true"
     style="width:100%;height:300px;border:none;"></iframe>
   </div>
  </div>
@@ -1643,7 +1618,7 @@ document.addEventListener('DOMContentLoaded', function() {
  <a href="#stream">Live Stream</a>
  <a href="#djs">DJ Lineup</a>
  <a href="#archive">Mix Archief</a>
- <a href="#soundcloud">SoundCloud</a>
+ <a href="#mixcloud">Mixcloud</a>
  <a href="#instagram">Instagram</a>
  </div>
  <div class="footer-right">
