@@ -1403,13 +1403,13 @@ document.addEventListener('DOMContentLoaded', function() {
   <!-- REGULAR LINEUP -->
   <div class="lineup-section">
    <div class="lineup-header">
-    <div class="lineup-month" style="color:#c0395e">🎧 Regular — Maart & April 2026</div>
-    <div class="lineup-event">Elke zaterdag · 28 maart · 11, 18 &amp; 25 april · 21:00 – 01:00</div>
+    <div class="lineup-month" style="color:#c0395e">🎧 Regular — April 2026</div>
+    <div class="lineup-event">Elke zaterdag · 11, 18 &amp; 25 april · 21:00 – 01:00</div>
    </div>
    <div class="lineup-list">
     <div class="lineup-row">
      <div class="lineup-time">21:00 – 22:00</div>
-     <div class="lineup-dj">P.H.S</div>
+     <div class="lineup-dj">P.H.S.</div>
     </div>
     <div class="lineup-row">
      <div class="lineup-time">22:00 – 23:00</div>
@@ -1421,7 +1421,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     <div class="lineup-row">
      <div class="lineup-time">24:00 – 01:00</div>
-     <div class="lineup-dj">Purple Desert Sessions</div>
+     <div class="lineup-dj">Alien NTT</div>
     </div>
    </div>
   </div>
@@ -1429,13 +1429,13 @@ document.addEventListener('DOMContentLoaded', function() {
   <!-- CLUB NIGHT LINEUP -->
   <div class="lineup-section">
    <div class="lineup-header">
-    <div class="lineup-month" id="lineup-month">🔴 Live Broadcasting — April 2026</div>
-    <div class="lineup-event" id="lineup-date">Zaterdag 4 april 2026 · 21:00 – 01:00</div>
+    <div class="lineup-month" id="lineup-month">🔴 Live Broadcasting — Mei 2026</div>
+    <div class="lineup-event" id="lineup-date">Zaterdag 2 mei 2026 · 21:00 – 01:00</div>
    </div>
    <div class="lineup-list">
     <div class="lineup-row">
      <div class="lineup-time">21:00 – 22:00</div>
-     <div class="lineup-dj">Ian Barras &amp; Perry Owens</div>
+     <div class="lineup-dj" style="color:var(--ink3);font-style:italic;">Wordt later bekend gemaakt</div>
     </div>
     <div class="lineup-row">
      <div class="lineup-time">22:00 – 23:00</div>
@@ -1778,12 +1778,4 @@ updateCountdowns();
 setInterval(updateCountdowns, 1000);
 
 // ===== LINEUP DATE =====
-(function() {
-  var months = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
-  var monthsNL = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
-  function firstSatOf(y, m) { var d = new Date(y, m, 1, 21, 0, 0); while (d.getDay() !== 6) d.setDate(d.getDate() + 1); return d; }
-  var now = new Date(); var y = now.getFullYear(), m = now.getMonth();
-  var next = firstSatOf(y, m);
-  if (now > next) { m++; if (m > 11) { m = 0; y++; } next = firstSatOf(y, m); }
-  var el1 = document.getElementById('lineup-month');
-  var 
+// Datum handmatig ingesteld - auto update uitgeschakeld
